@@ -1,0 +1,160 @@
+/* Exit Games Common - C++ Client Lib
+ * Copyright (C) 2004-2013 by Exit Games GmbH. All rights reserved.
+ * http://www.exitgames.com
+ * mailto:developer@exitgames.com
+ */
+
+#ifndef __DICTIONARY_BASE_H
+#define __DICTIONARY_BASE_H
+
+#include "Hashtable.h"
+
+namespace ExitGames
+{
+	namespace Common
+	{
+		class DictionaryBase: public Base
+		{
+		public:
+			using ToString::toString;
+
+			virtual ~DictionaryBase(void);
+
+			DictionaryBase(const DictionaryBase& toCopy);
+			DictionaryBase& operator=(const DictionaryBase& toCopy);
+
+			bool operator==(const DictionaryBase &toCompare) const;
+			bool operator!=(const DictionaryBase &toCompare) const;
+
+			void removeAllElements(void);
+			JString& toString(JString& retStr, bool withTypes=false) const;
+			const Hashtable& getHashtable(void) const;
+			unsigned int getSize(void) const;
+			virtual const nByte* getKeyTypes(void) const;
+			virtual const nByte* getValueTypes(void) const;
+			template<typename FKeyType> const short* getValueSizes(const FKeyType& key) const;
+			virtual const unsigned int* getValueDimensions(void) const;
+			template<typename FKeyType, typename FValueType> const FValueType* getValue(const FKeyType& key, const FValueType& /*dummyDeducer*/) const;
+			template<typename FKeyType> const Object* getValue(const FKeyType& key, const Object& /*dummyDeducer*/) const;
+			template<typename FKeyType> JVector<FKeyType> getKeys(void) const;
+		protected:
+			DictionaryBase(void);
+
+			virtual DictionaryBase& assign(const DictionaryBase& toCopy);
+
+			void put(const DictionaryBase& src);
+			template<typename FKeyType, typename FValueType> void put(const FKeyType& key, const FValueType& val);
+			template<typename FKeyType> void put(const FKeyType& key);
+			template<typename FKeyType, typename FValueType> void put(const FKeyType& key, FValueType pVal, short size);
+			template<typename FKeyType, typename FValueType> void put(const FKeyType& key, FValueType pVal, const short* const sizes);
+			template<typename FValueType> const FValueType& getElementAt(unsigned int index, const FValueType& /*dummyDeducer*/) const;
+			const Object& getElementAt(unsigned int index, const Object& /*dummyDeducer*/) const;
+			template<typename FValueType> FValueType& getElementAt(unsigned int index, const FValueType& /*dummyDeducer*/);
+			Object& getElementAt(unsigned int index, const Object& /*dummyDeducer*/);
+		private:
+			DictionaryBase(nByte* pKeyTypes, nByte* pValueTypes, unsigned int* pValueDimensions);
+			virtual bool compare(const DictionaryBase &toCompare) const;
+			virtual DictionaryBase* copy(short amount) const;
+
+			class TypeInfo : public Base
+			{
+			public:
+				using ToString::toString;
+
+				TypeInfo(nByte* pKeyTypes, nByte* pValueTypes, unsigned int* pValueDimensions);
+				TypeInfo(const TypeInfo& toCopy);
+				TypeInfo& operator=(const TypeInfo& toCopy);
+				~TypeInfo(void);
+
+				JString& toString(JString& retStr, bool withTypes=false) const;
+				const nByte* getKeyTypes(void) const;
+				const nByte* getValueTypes(void) const;
+				const unsigned int* getValueDimensions(void) const;
+			private:
+				void init(nByte* pKeyTypes, nByte* pValueTypes, unsigned int* pValueDimensions);
+				void cleanup(void);
+				JString& toStringRecursor(JString& retStr, bool withTypes, unsigned int recursionDepth=0) const;
+
+				nByte* mpKeyTypes;
+				nByte* mpValueTypes;
+				unsigned int* mpValueDimensions;
+			};
+
+			Hashtable mHashtable;
+			TypeInfo* mpTypeInfo;
+
+			friend class Object;
+			friend class DeSerializer;
+		};
+
+
+
+
+		template<typename FKeyType>
+		const short* DictionaryBase::getValueSizes(const FKeyType& key) const
+		{
+			return getHashtable().getValue(key)->getSizes();
+		}
+
+		template<typename FKeyType, typename FValueType>
+		void DictionaryBase::put(const FKeyType& key, const FValueType& val)
+		{
+			mHashtable.put(key, val);
+		}
+
+		template<typename FKeyType>
+		void DictionaryBase::put(const FKeyType& key)
+		{
+			mHashtable.put(key);
+		}
+
+		template<typename FKeyType, typename FValueType>
+		void DictionaryBase::put(const FKeyType& key, FValueType pVal, short size)
+		{
+			mHashtable.put(key, pVal, size);
+		}
+
+		template<typename FKeyType, typename FValueType>
+		void DictionaryBase::put(const FKeyType& key, FValueType pVal, const short* const sizes)
+		{
+			mHashtable.put(key, pVal, sizes);
+		}
+
+		template<typename FKeyType, typename FValueType>
+		const FValueType* DictionaryBase::getValue(const FKeyType& key, const FValueType& /*dummyDeducer*/) const
+		{
+			ValueObject<FValueType>* retObject = (ValueObject<FValueType>*)getHashtable().getValue(key);
+			return retObject?retObject->getDataAddress():NULL;
+		}
+
+		template<typename FKeyType>
+		const Object* DictionaryBase::getValue(const FKeyType& key, const Object& /*dummyDeducer*/) const
+		{
+			return getHashtable().getValue(key);
+		}
+
+		template<typename FKeyType>
+		JVector<FKeyType> DictionaryBase::getKeys(void) const
+		{
+			JVector<FKeyType> keys;
+			JVector<Object> keyObjs = getHashtable().getKeys();
+			for(unsigned int i=0 ; i<keyObjs.getSize() ; ++i)
+				keys.addElement(static_cast<KeyObject<FKeyType> >(keyObjs[i]).getDataCopy());
+			return keys;
+		}
+
+		template<typename FValueType>
+		const FValueType& DictionaryBase::getElementAt(unsigned int index, const FValueType& /*dummyDeducer*/) const
+		{
+			return *((ValueObject<FValueType>&)getHashtable()[index]).getDataAddress();
+		}
+
+		template<typename FValueType>
+		FValueType& DictionaryBase::getElementAt(unsigned int index, const FValueType& /*dummyDeducer*/)
+		{
+			return *((ValueObject<FValueType>&)getHashtable()[index]).getDataAddress();
+		}
+	}
+}
+
+#endif

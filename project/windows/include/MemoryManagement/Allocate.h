@@ -1,0 +1,123 @@
+/* Exit Games Common - C++ Client Lib
+ * Copyright (C) 2004-2013 by Exit Games GmbH. All rights reserved.
+ * http://www.exitgames.com
+ * mailto:developer@exitgames.com
+ */
+
+#ifndef __ALLOCATE_H
+#define __ALLOCATE_H
+
+#include <new>
+#include "MemoryManagement/MemoryPoolManager.h"
+
+#ifdef _EG_WINDOWS_PLATFORM
+#	pragma push_macro("new")
+#	undef new
+#endif
+
+namespace ExitGames
+{
+	namespace Common
+	{
+		namespace MemoryManagement
+		{
+			/** @file */
+
+#			define ALLOCATE(type, p, ...) (p = reinterpret_cast<type*>(EG_MALLOC(sizeof(type))), new(p) type(__VA_ARGS__))
+#			define ALLOCATE_ARRAY(type, p, count, ...) p = reinterpret_cast<type*>(reinterpret_cast<size_t*>(EG_MALLOC(sizeof(type)*count+sizeof(size_t)))+1); *(reinterpret_cast<size_t*>(p)-1) = count; for(size_t i=0; i<count; ++i) ::new(p+i) type(__VA_ARGS__);
+#			define ALLOCATE_TEMPLATE_BODY(...) {Ftype* p; ALLOCATE(Ftype, p, __VA_ARGS__); return p;}
+#			define ALLOCATE_ARRAY_TEMPLATE_BODY(count, ...) {Ftype* p; ALLOCATE_ARRAY(Ftype, p, count, __VA_ARGS__); return p;}
+#			define REALLOCATE_ARRAY(type, p, count, ...) {Ftype* pOut; size_t oldCount = p?*(reinterpret_cast<size_t*>(const_cast<Ftype*>(p))-1):0; pOut = reinterpret_cast<Ftype*>(reinterpret_cast<size_t*>(EG_MALLOC(sizeof(Ftype)*count+sizeof(size_t)))+1); *(reinterpret_cast<size_t*>(pOut)-1) = count; for(size_t i=0; i<oldCount && i<count; ++i) new(pOut+i) Ftype(p[i]); for(size_t i=oldCount; i<count; ++i) new(pOut+i) Ftype(__VA_ARGS__); DEALLOCATE_ARRAY(Ftype, p); p = pOut; return p;}
+#			define REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, ...) {REALLOCATE_ARRAY(Ftype, p, count, __VA_ARGS__); return p;}
+#			define DEALLOCATE(type, p) if(p){p->~type(); EG_FREE(const_cast<type*>(p));}
+#			define DEALLOCATE_ARRAY(type, p) if(p){size_t* pRaw = (reinterpret_cast<size_t*>(const_cast<type*>(p))-1); for(size_t i=*pRaw; i-->0;) p[i].~type(); EG_FREE(pRaw);}
+
+			template<typename Ftype>                                                                                                                                    Ftype* allocate(void)                                                                             ALLOCATE_TEMPLATE_BODY()
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* allocate(P1& p1)                                                                           ALLOCATE_TEMPLATE_BODY(p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* allocate(P1& p1, P2& p2)                                                                   ALLOCATE_TEMPLATE_BODY(p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* allocate(P1& p1, P2& p2, P3& p3)                                                           ALLOCATE_TEMPLATE_BODY(p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4)                                                   ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5)                                           ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6)                                   ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7)                           ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8)                   ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9)           ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* allocate(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9, P10& p10) ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* allocate(const P1& p1)                                                                                                                                 ALLOCATE_TEMPLATE_BODY(p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* allocate(const P1& p1, const P2& p2)                                                                                                                   ALLOCATE_TEMPLATE_BODY(p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* allocate(const P1& p1, const P2& p2, const P3& p3)                                                                                                     ALLOCATE_TEMPLATE_BODY(p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4)                                                                                       ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5)                                                                         ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6)                                                           ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7)                                             ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8)                               ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9)                 ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* allocate(const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9, const P10& p10) ALLOCATE_TEMPLATE_BODY(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype>                                                                                                                                    Ftype* allocateArray(size_t count)                                                                                   ALLOCATE_ARRAY_TEMPLATE_BODY(count)
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* allocateArray(size_t count, P1& p1)                                                                           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* allocateArray(size_t count, P1& p1, P2& p2)                                                                   ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3)                                                           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4)                                                   ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5)                                           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6)                                   ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7)                           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8)                   ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9)           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* allocateArray(size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9, P10& p10) ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* allocateArray(size_t count, const P1& p1)                                                                                                                                 ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* allocateArray(size_t count, const P1& p1, const P2& p2)                                                                                                                   ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3)                                                                                                     ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4)                                                                                       ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5)                                                                         ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6)                                                           ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7)                                             ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8)                               ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9)                 ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* allocateArray(size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9, const P10& p10) ALLOCATE_ARRAY_TEMPLATE_BODY(count, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype>                                                                                                                                    Ftype* reallocateArray(Ftype* p, size_t count)                                                                                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count)
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* reallocateArray(Ftype* p, size_t count, P1& p1)                                                                           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2)                                                                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3)                                                           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4)                                                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5)                                           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6)                                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7)                           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8)                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9)           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* reallocateArray(Ftype* p, size_t count, P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9, P10& p10) REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype, typename P1>                                                                                                                       Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1)                                                                                                                                 REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1)
+			template<typename Ftype, typename P1, typename P2>                                                                                                          Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2)                                                                                                                   REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2)
+			template<typename Ftype, typename P1, typename P2, typename P3>                                                                                             Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3)                                                                                                     REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4>                                                                                Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4)                                                                                       REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5>                                                                   Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5)                                                                         REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>                                                      Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6)                                                           REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>                                         Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7)                                             REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>                            Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8)                               REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>               Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9)                 REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8, p9)
+			template<typename Ftype, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10> Ftype* reallocateArray(Ftype* p, size_t count, const P1& p1, const P2& p2, const P3& p3, const P4& p4, const P5& p5, const P6& p6, const P7& p7, const P8& p8, const P9& p9, const P10& p10) REALLOCATE_ARRAY_TEMPLATE_BODY(p, count, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+
+			template<typename Ftype>
+			void deallocate(const Ftype* p)
+			{
+				DEALLOCATE(Ftype, p);
+			}
+
+			template<typename Ftype>
+			void deallocateArray(const Ftype* p)
+			{
+				DEALLOCATE_ARRAY(Ftype, p);
+			}
+		}
+	}
+}
+
+#ifdef _EG_WINDOWS_PLATFORM
+#	pragma pop_macro("new")
+#endif
+
+#endif
