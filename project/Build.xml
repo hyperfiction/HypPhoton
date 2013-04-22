@@ -32,19 +32,27 @@
     <set name="name_prefix" value="lib" if="iphone" />
 
     <files id="common">
-         <compilerflag value="-Iinclude"/>
-        <file name="common/ExternalInterface.cpp"/>
+
     </files>
 
     <files id="android">
-
+        <compilerflag value="-Iinclude"/>
+        <file name="common/ExternalInterface.cpp"/>
+        <file name="common/HypPhoton.cpp"/>
+        <compilerflag value="-Iandroid/include"/>
+        <compilerflag value="-Iandroid/photon-common"/>
+        <compilerflag value="-Iandroid/photon-core"/>
+        <compilerflag value="-Iandroid/photon-loadbalancing"/>
     </files>
 
-    <files id="windows">
+    <files id="win_desktop">
         <compilerflag value="-Iinclude"/>
+        <file name="common/ExternalInterface.cpp"/>
+        <file name="common/HypPhoton.cpp"/>
         <compilerflag value="-Iwindows/include"/>
-        <file name="windows/HypPhoton.cpp"/>
-
+        <compilerflag value="-Iwindows/photon-common"/>
+        <compilerflag value="-Iwindows/photon-core"/>
+        <compilerflag value="-Iwindows/photon-loadbalancing"/>
      </files>
 
     <!--
@@ -63,15 +71,20 @@
         <outdir name="../ndll/${BINDIR}" />
         <ext value=".ndll" unless="mobile"/>
 
-        <files id="common"/>
         <files id="iphone" if="iphone"/>
         <files id="android" if="android"/>
-        <files id="windows" if="windows"/>
-        <!-- Windows -->
+        <files id="win_desktop" if="windows"/>
+        <files id="common"/>
 
+        <!-- Windows -->
         <lib if="windows" name="../libs/windows/release/Common-cpp_release_win32.lib"/>
         <lib if="windows" name="../libs/windows/release/Photon-cpp_release_win32.lib"/>
         <lib if="windows" name="../libs/windows/release/LoadBalancing-cpp_release_win32.lib"/>
+
+        <!-- Android -->
+        <lib if="android" name="../libs/android/release/libcommon-cpp-static_release_android_armeabi.a"/>
+        <lib if="android" name="../libs/android/release/libloadbalancing-cpp-prebuilt-static_release_android_armeabi.a"/>
+        <lib if="android" name="../libs/android/release/libphoton-cpp-static_release_android_armeabi.a"/>
 
     </target>
 
