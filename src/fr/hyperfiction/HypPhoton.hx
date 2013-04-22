@@ -10,7 +10,9 @@ class HypPhoton{
 	public var onStatus	( default , default ) : Int->Void;
 	public var onEvent	( default , default) : String->String->Void;
 
+	#if android
 	private var _cb : HaxeObject;
+	#end
 
 	// -------o constructor
 
@@ -22,7 +24,9 @@ class HypPhoton{
 		*/
 		public function new( ) {
 			trace("constructor");
+			#if android
 			_cb = new HaxeObject( );
+			#end
 			_setStatus_callback( _onStatus );
 			_setEvent_callback( _onEvent );
 		}
@@ -35,7 +39,22 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_setUser_name")
+		#end
+		public function setUser_name( setUser_name : String ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_connect")
+		#end
 		public function connect( sHost : String ) : Void {
 			trace("connect");
 			#if cpp
@@ -49,7 +68,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_test")
+		#end
 		public function test( ) : Void {
 
 		}
@@ -60,7 +81,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_update")
+		#end
 		public function update( ) : Void {
 
 		}
@@ -71,7 +94,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_joinRandom_room")
+		#end
 		public function joinRandom_room( iMax_players : Int ) : Void{
 
 		}
@@ -82,7 +107,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_createRoom")
+		#end
 		public function createRoom( max : Int ) : Void {
 
 		}
@@ -93,7 +120,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_send")
+		#end
 		public function send( s : String ) : Void {
 
 		}
@@ -106,7 +135,9 @@ class HypPhoton{
 		* @public
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_setStatus_callback")
+		#end
 		private function _setStatus_callback( f : Int->Void ) : Void {
 
 		}
@@ -117,7 +148,9 @@ class HypPhoton{
 		* @private
 		* @return	void
 		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_setEvent_callback")
+		#end
 		private function _setEvent_callback( f : String->String->Void ) : Void{
 
 		}
@@ -182,7 +215,7 @@ class PhotonEvents{
 	public static inline var SERVER_WARNING			: String = "SERVER_WARNING";
 	public static inline var EVENT				: String = "EVENT";
 }
-
+#if android
 class HaxeObject{
 	public var onStatus : String->Void;
 	public var onEvent : Int->Void;
@@ -191,3 +224,4 @@ class HaxeObject{
 
 	}
 }
+#end

@@ -39,6 +39,7 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		void joinRandom_room( int maxPlayers );
 		void createRoom( int maxPlayers );
 		void send( const char *sText );
+		void setUser_name( const char *sUser_name );
 
 	private:
 		//HypPhoton (const HypPhoton&){}

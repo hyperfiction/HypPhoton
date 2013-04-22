@@ -78,6 +78,12 @@ extern "C"{
 	}
 	DEFINE_PRIM( HypPhoton_send , 1 );
 
+	static value HypPhoton_setUser_name( value sName ){
+		HypPhoton::Instance( ).setUser_name( val_string( sName ) );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_setUser_name , 1 );
+
 // Callbacks --------------------------------------------------------------------------------------
 
 	static value HypPhoton_setStatus_callback( value cb ){
