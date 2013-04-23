@@ -53,6 +53,13 @@ extern "C"{
 	}
 	DEFINE_PRIM( HypPhoton_connect , 1 );
 
+	static value HypPhoton_disconnect( ){
+		printf("disconnect\n");
+		HypPhoton::Instance( ).disconnect( );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_disconnect , 0 );
+
 	static value HypPhoton_update( ){
 		HypPhoton::Instance( ).update( );
 		return alloc_null( );

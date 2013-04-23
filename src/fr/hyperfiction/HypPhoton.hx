@@ -62,6 +62,19 @@ class HypPhoton{
 		* @return	void
 		*/
 		#if cpp
+		@CPP("HypPhoton","HypPhoton_disconnect")
+		#end
+		public function disconnect( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_test")
 		#end
 		public function test( ) : Void {

@@ -51,6 +51,11 @@ void HypPhoton::connect( const char *sHost ){
 	mLoadBalancingClient.connect( sHost );
 }
 
+void HypPhoton::disconnect( ){
+	printf("disconnect\n");
+	mLoadBalancingClient.disconnect( );
+}
+
 void HypPhoton::setUser_name( const char *sUser_name ){
 	mLoadBalancingClient.getCurrentlyJoinedRoom( ).getLocalPlayer( ).setName( sUser_name );
 }
