@@ -41,6 +41,8 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		void createRoom( int maxPlayers );
 		void send( const char *sText );
 		void setUser_name( const char *sUser_name );
+		int getState( void );
+		void hideRoom( void );
 
 	private:
 		//HypPhoton (const HypPhoton&){}
@@ -48,7 +50,6 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		~HypPhoton();
 		static HypPhoton m_instance;
 		const char * convert( int code );
-
 		virtual void clientErrorReturn(int errorCode);
 		virtual void connectReturn(int errorCode, const ExitGames::Common::JString& errorString);
 		virtual void connectionErrorReturn(int errorCode);

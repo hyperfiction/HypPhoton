@@ -133,6 +133,32 @@ class HypPhoton{
 
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_getState")
+		#end
+		public function getState( ) : Int {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_hideRoom")
+		#end
+		public function hideRoom( ) : Void {
+
+		}
+
 	// -------o private
 
 		/**
@@ -211,4 +237,14 @@ class PhotonEvents{
 	public static inline var SERVER_ERROR			: String = "SERVER_ERROR";
 	public static inline var SERVER_WARNING			: String = "SERVER_WARNING";
 	public static inline var EVENT				: String = "EVENT";
+}
+
+class PhotonState{
+
+	public static inline var DISCONNECTED             : Int = 0; // The peer is disconnected and can't call Operations. Call PhotonPeer_connect().
+	public static inline var CONNECTING               : Int = 1; // The peer is establishing the connection: opening a socket, exchanging packages with Photon.
+	public static inline var INITIALIZING_APPLICATION : Int = 2; // The connection is established and now sends the application name to Photon. You set the "application name" by calling PhotonPeer_connect().
+	public static inline var CONNECTED                : Int = 3; // The peer is connected and initialized (selected an application). You can now use operations.
+	public static inline var DISCONNECTING            : Int = 4; // The peer is disconnecting. It sent a disconnect to the server, which will acknowledge closing the connection.
+
 }

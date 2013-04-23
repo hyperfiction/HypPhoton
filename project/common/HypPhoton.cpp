@@ -89,6 +89,15 @@ void HypPhoton::send( const char *sText ){
 	mLoadBalancingClient.opRaiseEvent(true, data, 100);
 }
 
+int HypPhoton::getState( void ){
+	return mLoadBalancingClient.getState( );
+}
+
+void HypPhoton::hideRoom( void ){
+	printf("hideRoom\n");
+	mLoadBalancingClient.getCurrentlyJoinedRoom( ).setIsVisible( false );
+}
+
 //constructors / destructor  -----------------------------------------------------------------------------------------
 
 HypPhoton::HypPhoton()
@@ -144,8 +153,7 @@ void HypPhoton::createRoomReturn(int localPlayerNr, const ExitGames::Common::Has
 		onEvent( CREATE_ROOM_ERROR , errorString.UTF8Representation( ) );
 		return;
 	}
-
-	printf("game room %s has been successfully created\n" , mLoadBalancingClient.getCurrentlyJoinedRoom().getName().cstr( ));
+	printf("game room has been successfully created\n");
 	onEvent( CREATE_ROOM_SUCCESS , mLoadBalancingClient.getCurrentlyJoinedRoom().getName().UTF8Representation( ) );
 }
 
@@ -183,12 +191,13 @@ void HypPhoton::joinLobbyReturn(void){
 }
 
 void HypPhoton::joinRandomRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString){
-
+	printf("joinRandomRoomReturn\n");
 	if( errorCode ){
 		printf("opJoinRandomRoom() failed: %s\n", errorString.cstr( ));
 		onEvent( JOIN_RANDOM_ROOM_ERROR , errorString.UTF8Representation( ));
 		return;
 	}
+
 	onEvent( JOIN_RANDOM_ROOM_SUCCESS , mLoadBalancingClient.getCurrentlyJoinedRoom( ).getName( ).UTF8Representation( ) );
 }
 
@@ -198,6 +207,7 @@ void HypPhoton::joinRoomEventAction(int playerNr, const ExitGames::Common::JVect
 
 void HypPhoton::joinRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString){
 	printf("joinRoomReturn()\n");
+
 	if( errorCode ){
 		onEvent( JOIN_ROOM_ERROR , errorString.UTF8Representation( ) );
 		return;

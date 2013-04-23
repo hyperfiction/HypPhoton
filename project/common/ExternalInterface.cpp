@@ -54,7 +54,7 @@ extern "C"{
 	DEFINE_PRIM( HypPhoton_connect , 1 );
 
 	static value HypPhoton_disconnect( ){
-		printf("disconnect\n");
+		printf("HypPhoton_disconnect\n");
 		HypPhoton::Instance( ).disconnect( );
 		return alloc_null( );
 	}
@@ -90,6 +90,17 @@ extern "C"{
 		return alloc_null( );
 	}
 	DEFINE_PRIM( HypPhoton_setUser_name , 1 );
+
+	static value HypPhoton_getState( ){
+		return alloc_int( HypPhoton::Instance( ).getState( ) );
+	}
+	DEFINE_PRIM( HypPhoton_getState , 0 );
+
+	static value HypPhoton_hideRoom( ){
+		HypPhoton::Instance( ).hideRoom( );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_hideRoom , 0 );
 
 // Callbacks --------------------------------------------------------------------------------------
 
