@@ -10,10 +10,6 @@ class HypPhoton{
 	public var onStatus	( default , default ) : Int->Void;
 	public var onEvent	( default , default) : String->String->Void;
 
-	#if android
-	private var _cb : HaxeObject;
-	#end
-
 	// -------o constructor
 
 		/**
@@ -24,9 +20,6 @@ class HypPhoton{
 		*/
 		public function new( ) {
 			trace("constructor");
-			#if android
-			_cb = new HaxeObject( );
-			#end
 			_setStatus_callback( _onStatus );
 			_setEvent_callback( _onEvent );
 		}
@@ -181,15 +174,6 @@ class HypPhoton{
 
 	// -------o android
 
-		#if android
-
-		@JNI( "fr.hyperfiction.HypPhoton" , "getInstance" )
-		static private function getJava_instance( ) : HypPhoton { }
-
-		@JNI( "fr.hyperfiction.HypPhoton" , "connect" )
-		private function _connect( instance : Dynamic , sHost : String , sApp_name : String , cb : HaxeObject ) : Void { }
-
-		#end
 }
 
 class PhotonEvents{
@@ -215,13 +199,3 @@ class PhotonEvents{
 	public static inline var SERVER_WARNING			: String = "SERVER_WARNING";
 	public static inline var EVENT				: String = "EVENT";
 }
-#if android
-class HaxeObject{
-	public var onStatus : String->Void;
-	public var onEvent : Int->Void;
-
-	public function new( ){
-
-	}
-}
-#end

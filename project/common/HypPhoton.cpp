@@ -89,7 +89,6 @@ void HypPhoton::send( const char *sText ){
 HypPhoton::HypPhoton()
 #ifdef _EG_MS_COMPILER
 #	pragma warning(push)
-#	pragma warning(disable:4355)
 #endif
 	: mLoadBalancingClient(*this, L"f0350eac-4528-41d7-b0e8-0621a46429e8", L"1.0", PLAYER_NAME )
 #ifdef _EG_MS_COMPILER
@@ -159,7 +158,7 @@ void HypPhoton::debugReturn(ExitGames::Common::DebugLevel::DebugLevel debugLevel
 }
 
 void HypPhoton::debugReturn(const ExitGames::Common::JString& string){
-	printf("HypPhoton::debugReturn %s\n",string);
+	printf("HypPhoton::debugReturn %s\n",string.cstr( ));
 	onEvent( DEBUG_RETURN , string.UTF8Representation( ) );
 }
 

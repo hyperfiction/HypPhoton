@@ -36,9 +36,9 @@
     </files>
 
     <files id="android">
-        <compilerflag value="-Iinclude"/>
         <file name="common/ExternalInterface.cpp"/>
         <file name="common/HypPhoton.cpp"/>
+        <compilerflag value="-Iinclude"/>
         <compilerflag value="-Iandroid/include"/>
         <compilerflag value="-Iandroid/photon-common"/>
         <compilerflag value="-Iandroid/photon-core"/>
@@ -47,12 +47,12 @@
 
     <files id="win_desktop">
         <compilerflag value="-Iinclude"/>
-        <file name="common/ExternalInterface.cpp"/>
-        <file name="common/HypPhoton.cpp"/>
         <compilerflag value="-Iwindows/include"/>
         <compilerflag value="-Iwindows/photon-common"/>
         <compilerflag value="-Iwindows/photon-core"/>
         <compilerflag value="-Iwindows/photon-loadbalancing"/>
+        <file name="common/ExternalInterface.cpp"/>
+        <file name="common/HypPhoton.cpp"/>
      </files>
 
     <!--
@@ -69,12 +69,6 @@
 
     <target id="NDLL" output="${name_prefix}HypPhoton${name_extra}" tool="linker" toolid="${ndll-tool}">
         <outdir name="../ndll/${BINDIR}" />
-        <ext value=".ndll" unless="mobile"/>
-
-        <files id="iphone" if="iphone"/>
-        <files id="android" if="android"/>
-        <files id="win_desktop" if="windows"/>
-        <files id="common"/>
 
         <!-- Windows -->
         <lib if="windows" name="../libs/windows/release/Common-cpp_release_win32.lib"/>
@@ -82,9 +76,19 @@
         <lib if="windows" name="../libs/windows/release/LoadBalancing-cpp_release_win32.lib"/>
 
         <!-- Android -->
+        <lib if="android" name="../libs/android/debug/libcommon-cpp-static_debug_android_armeabi.a"/>
+        <lib if="android" name="../libs/android/debug/libphoton-cpp-static_debug_android_armeabi.a"/>
+        <lib if="android" name="../libs/android/debug/libloadbalancing-cpp-prebuilt-static_debug_android_armeabi.a"/>
         <lib if="android" name="../libs/android/release/libcommon-cpp-static_release_android_armeabi.a"/>
-        <lib if="android" name="../libs/android/release/libloadbalancing-cpp-prebuilt-static_release_android_armeabi.a"/>
         <lib if="android" name="../libs/android/release/libphoton-cpp-static_release_android_armeabi.a"/>
+        <lib if="android" name="../libs/android/release/libloadbalancing-cpp-prebuilt-static_release_android_armeabi.a"/>
+
+        <ext value=".ndll" unless="mobile"/>
+
+        <files id="common"/>
+        <files id="iphone" if="iphone"/>
+        <files id="android" if="android"/>
+        <files id="win_desktop" if="windows"/>
 
     </target>
 

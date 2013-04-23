@@ -46,7 +46,7 @@ namespace ExitGames
 			void popArrayOfDictionaries(Object& dict, short arraySize, int dimensions = 0);
 			const DictionaryBase* popDictionaryHelper(nByte* pKeyTypes, nByte* pValueTypes, unsigned int* pDimensionsOfNestedValues);
 			void popCustomHelper(Object& object, nByte customType, short arraySize);
-			void popArray(Object& array); 
+			void popArray(Object& array);
 			void popObjectArray(Object& array);
 
 			int getReadPosition() const { return mDataOffset; }
