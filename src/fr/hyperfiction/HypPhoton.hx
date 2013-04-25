@@ -75,6 +75,19 @@ class HypPhoton{
 		* @return	void
 		*/
 		#if cpp
+		@CPP("HypPhoton","HypPhoton_joinLobby")
+		#end
+		public function joinLobby( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_test")
 		#end
 		public function test( ) : Void {
@@ -116,7 +129,7 @@ class HypPhoton{
 		#if cpp
 		@CPP("HypPhoton","HypPhoton_createRoom")
 		#end
-		public function createRoom( max : Int ) : Void {
+		public function createRoom( sName : String , max : Int ) : Void {
 
 		}
 
@@ -142,8 +155,8 @@ class HypPhoton{
 		#if cpp
 		@CPP("HypPhoton","HypPhoton_getState")
 		#end
-		public function getState( ) : Int {
-
+		public function getState( ) : String {
+			return "";
 		}
 
 		/**
@@ -206,7 +219,8 @@ class HypPhoton{
 		*/
 		private function _onEvent( s : String , v : String ) : Void{
 			//trace("_onEvent ::: "+s+" - "+v);
-			onEvent( s , v );
+			if( onEvent != null )
+				onEvent( s , v );
 		}
 
 	// -------o misc

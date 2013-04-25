@@ -16,6 +16,14 @@
 #include <hxcpp.h>
 #include <stdio.h>
 
+#ifdef ANDROID
+	#include <hx/CFFI.h>
+	#include <hx/Macros.h>
+	#include <jni.h>
+	#define LOG_TAG "trace"
+	#define printf(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#endif
+
 
 AutoGCRoot *eval_onStatus = 0;
 AutoGCRoot *eval_onEvent = 0;
@@ -23,12 +31,12 @@ AutoGCRoot *eval_onEvent = 0;
 extern "C"{
 
 	int HypPhoton_register_prims(){
-		//printf("HypPhoton : register_prims()\n");
+		printf("HypPhoton : register_prims()\n");
 		return 0;
 	}
 
 	void onStatus( int status ){
-		//printf("onStatus");
+		printf("onStatus");
 		val_call1( eval_onStatus->get( )  , alloc_int( status ) );
 	}
 
@@ -40,14 +48,14 @@ extern "C"{
 // Common --------------------------------------------------------------------------------------
 
 	static value HypPhoton_test( ){
-		//printf("test\n");
+		printf("test\n");
 		HypPhoton::Instance( );
 		return alloc_null( );
 	}
 	DEFINE_PRIM( HypPhoton_test , 0 );
 
 	static value HypPhoton_connect( value sHost ){
-		//printf("connect\n");
+		printf("connect\n");
 		HypPhoton::Instance().connect( val_string( sHost ) );
 		return alloc_null( );
 	}
@@ -67,19 +75,21 @@ extern "C"{
 	DEFINE_PRIM( HypPhoton_update , 0 );
 
 	static value HypPhoton_joinRandom_room( value iMax ){
+		printf("HypPhoton_joinRandom_room %i\n",val_int( iMax));
 		HypPhoton::Instance( ).joinRandom_room( val_int( iMax ) );
 		return alloc_null( );
 	}
 	DEFINE_PRIM( HypPhoton_joinRandom_room , 1 );
 
-	static value HypPhoton_createRoom( value iMax ){
-		printf("createRoom with %d players max\n",val_int( iMax) );
-		HypPhoton::Instance( ).createRoom( val_int( iMax ) );
+	static value HypPhoton_createRoom( value sName , value iMax ){
+		printf("createRoom with %s %d players max\n",val_string( sName ) , val_int( iMax) );
+		HypPhoton::Instance( ).createRoom( val_string( sName ) , val_int( iMax ) );
 		return alloc_null( );
 	}
-	DEFINE_PRIM( HypPhoton_createRoom , 1 );
+	DEFINE_PRIM( HypPhoton_createRoom , 2 );
 
 	static value HypPhoton_send( value sText ){
+		printf("HypPhoton_send %s\n",val_string(sText) );
 		HypPhoton::Instance( ).send( val_string( sText ) );
 		return alloc_null( );
 	}
@@ -92,7 +102,7 @@ extern "C"{
 	DEFINE_PRIM( HypPhoton_setUser_name , 1 );
 
 	static value HypPhoton_getState( ){
-		return alloc_int( HypPhoton::Instance( ).getState( ) );
+		return alloc_string( HypPhoton::Instance( ).getState( ) );
 	}
 	DEFINE_PRIM( HypPhoton_getState , 0 );
 
@@ -101,6 +111,13 @@ extern "C"{
 		return alloc_null( );
 	}
 	DEFINE_PRIM( HypPhoton_hideRoom , 0 );
+
+	static value HypPhoton_joinLobby( ){
+		printf("HypPhoton_joinLobby\n");
+		HypPhoton::Instance( ).joinLobby( );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_joinLobby , 0 );
 
 // Callbacks --------------------------------------------------------------------------------------
 

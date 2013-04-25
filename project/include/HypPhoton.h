@@ -7,6 +7,7 @@
 #include "LoadBalancingListener.h"
 #include "LoadBalancingClient.h"
 #include "LoadBalancingPlayer.h"
+#include "PeerStates.h"
 
 #define CLIENT_ERROR			"CLIENT_ERROR"
 #define CONNECT_ERROR			"CONNECT_ERROR"
@@ -38,11 +39,12 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		void disconnect( );
 		void update( void );
 		void joinRandom_room( int maxPlayers );
-		void createRoom( int maxPlayers );
+		void createRoom( const char *sName , int maxPlayers );
 		void send( const char *sText );
 		void setUser_name( const char *sUser_name );
-		int getState( void );
+		const char * getState( void );
 		void hideRoom( void );
+		void joinLobby( void );
 
 	private:
 		//HypPhoton (const HypPhoton&){}

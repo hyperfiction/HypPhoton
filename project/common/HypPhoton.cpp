@@ -1,7 +1,6 @@
 #include "HypPhoton.h"
 #include "LoadBalancingClient.h"
 #include "LoadBalancingPlayer.h"
-//#include "limits.h"
 //#include "LitePeer.h"
 
 const unsigned char MESSAGE = 0;
@@ -64,19 +63,23 @@ void HypPhoton::update( ){
 	mLoadBalancingClient.service();
 }
 
+void HypPhoton::joinLobby( ){
+	mLoadBalancingClient.opJoinLobby( );
+}
+
 void HypPhoton::joinRandom_room( int maxPlayers ){
 	printf("joinRandom_room %i\n",maxPlayers );
 
 	ExitGames::Common::Hashtable 	roomProperties;
     							//roomProperties.put("map", "aap");
 
-   	mLoadBalancingClient.opJoinRandomRoom( roomProperties, 2);
+   	mLoadBalancingClient.opJoinRandomRoom( roomProperties, maxPlayers );
 }
 
-void HypPhoton::createRoom( int maxPlayers ){
+void HypPhoton::createRoom( const char *sRoom_name , int maxPlayers ){
 	printf("createRoom with %d max players\n",maxPlayers);
-	ExitGames::Common::JString tmp;
-   	mLoadBalancingClient.opCreateRoom(tmp=(int)GETTIMEMS() , true , true , maxPlayers );
+	//ExitGames::Common::JString tmp;
+   	mLoadBalancingClient.opCreateRoom( sRoom_name , true , true , maxPlayers );
 }
 
 
@@ -89,8 +92,78 @@ void HypPhoton::send( const char *sText ){
 	mLoadBalancingClient.opRaiseEvent(true, data, 100);
 }
 
-int HypPhoton::getState( void ){
-	return mLoadBalancingClient.getState( );
+const char * HypPhoton::getState( void ){
+	switch( mLoadBalancingClient.getState( ) ){
+
+		case ExitGames::LoadBalancing::PeerStates::Uninitialized:
+			return "Uninitialized";
+
+		case ExitGames::LoadBalancing::PeerStates::PeerCreated:
+			return "PeerCreated";
+
+		case ExitGames::LoadBalancing::PeerStates::Connecting:
+			return "Connecting";
+
+		case ExitGames::LoadBalancing::PeerStates::Connected:
+			return "Connected";
+
+		case ExitGames::LoadBalancing::PeerStates::Queued:
+			return "Queued";
+
+		case ExitGames::LoadBalancing::PeerStates::Authenticated:
+			return "Authenticated";
+
+		case ExitGames::LoadBalancing::PeerStates::JoinedLobby:
+			return "JoinedLobby";
+
+		case ExitGames::LoadBalancing::PeerStates::DisconnectingFromMasterserver:
+			return "DisconnectingFromMasterserver";
+
+		case ExitGames::LoadBalancing::PeerStates::ConnectingToGameserver:
+			return "ConnectingToGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::ConnectedToGameserver:
+			return "ConnectedToGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::AuthenticatedOnGameServer:
+			return "AuthenticatedOnGameServer";
+
+		case ExitGames::LoadBalancing::PeerStates::Joining:
+			return "Joining";
+
+		case ExitGames::LoadBalancing::PeerStates::Joined:
+			return "Joined";
+
+		case ExitGames::LoadBalancing::PeerStates::Leaving:
+			return "Leaving";
+
+		case ExitGames::LoadBalancing::PeerStates::Left:
+			return "Left";
+
+		case ExitGames::LoadBalancing::PeerStates::DisconnectingFromGameserver:
+			return "DisconnectingFromGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::ConnectingToMasterserver:
+			return "ConnectingToMasterserver";
+
+		case ExitGames::LoadBalancing::PeerStates::ConnectedComingFromGameserver:
+			return "ConnectedComingFromGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::QueuedComingFromGameserver:
+			return "QueuedComingFromGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::AuthenticatedComingFromGameserver:
+			return "AuthenticatedComingFromGameserver";
+
+		case ExitGames::LoadBalancing::PeerStates::Disconnecting:
+			return "Disconnecting";
+
+		case ExitGames::LoadBalancing::PeerStates::Disconnected:
+			return "Disconnected";
+
+
+	}
+	return "unknow state";
 }
 
 void HypPhoton::hideRoom( void ){
@@ -140,8 +213,8 @@ void HypPhoton::connectReturn(int errorCode, const ExitGames::Common::JString& e
 }
 
 void HypPhoton::connectionErrorReturn(int errorCode){
-	printf("HypPhoton::connectionErrorReturn %s\n",convert( errorCode));
-	onEvent( CONNECT_ERROR , "" );//convert( errorCode );
+	//printf("HypPhoton::connectionErrorReturn %s\n",convert( errorCode));
+	onEvent( CONNECT_ERROR , convert( errorCode ) );
 }
 
 void HypPhoton::createRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString){
@@ -245,7 +318,10 @@ void HypPhoton::warningReturn(int warningCode){
 }
 
 const char * HypPhoton::convert( int value ){
+	return "";
+	/*
 	std::stringstream 	out;
 					out << value;
 	return out.str( ).c_str( );
+	*/
 }
