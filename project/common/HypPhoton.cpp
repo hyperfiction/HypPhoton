@@ -35,6 +35,8 @@ const unsigned char MESSAGE = 0;
 #	define PLAYER_NAME L"unknown platform"
 #endif
 
+using namespace std;
+
 typedef void( *FunctionType)( );
 extern "C"{
 	void onStatus( int status );
@@ -169,6 +171,24 @@ const char * HypPhoton::getState( void ){
 void HypPhoton::hideRoom( void ){
 	printf("hideRoom\n");
 	mLoadBalancingClient.getCurrentlyJoinedRoom( ).setIsVisible( false );
+}
+
+const char * HypPhoton::getRoom_desc( void ){
+	return mLoadBalancingClient.getCurrentlyJoinedRoom( ).toString( ).UTF8Representation( );
+}
+
+const char * HypPhoton::getRoom_players( void ){
+	int l = mLoadBalancingClient.getCurrentlyJoinedRoom( ).getPlayers( ).getSize();
+	printf("getRoom_players %i\n", l);
+	ExitGames::Common::JString res = "";
+	for( unsigned int i=0 ; i < l ; i++ ){
+		//printf("%i::::::::::::::: s %s\n",i,mLoadBalancingClient.getCurrentlyJoinedRoom( ).getPlayers( )[i].getName( ).cstr( ) );
+		if(i != 0)
+    			res = res + "|||";
+  			res = res + mLoadBalancingClient.getCurrentlyJoinedRoom( ).getPlayers( )[i].getName( );//.cstr( );
+	}
+
+	return res.UTF8Representation( );
 }
 
 //constructors / destructor  -----------------------------------------------------------------------------------------

@@ -119,6 +119,16 @@ extern "C"{
 	}
 	DEFINE_PRIM( HypPhoton_joinLobby , 0 );
 
+	static value HypPhoton_getRoom_desc( ){
+		return alloc_string( HypPhoton::Instance( ).getRoom_desc( ));
+	}
+	DEFINE_PRIM( HypPhoton_getRoom_desc , 0 );
+
+	static value HypPhoton_getRoom_players( ){
+		return alloc_string( HypPhoton::Instance( ).getRoom_players( ) );
+	}
+	DEFINE_PRIM( HypPhoton_getRoom_players , 0 );
+
 // Callbacks --------------------------------------------------------------------------------------
 
 	static value HypPhoton_setStatus_callback( value cb ){

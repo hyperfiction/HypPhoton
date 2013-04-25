@@ -172,7 +172,48 @@ class HypPhoton{
 
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_getRoom_desc")
+		#end
+		public function getRoom_desc( ) : String {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public function getRoom_players( ) : Array<String> {
+			trace("getRoom_players");
+			#if cpp
+			var res = _getPlayers( );
+			return res.split(":::");
+			#end
+
+			return [ ];
+		}
+
 	// -------o private
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_getRoom_players")
+		#end
+		private function _getPlayers( ) : String{
+		}
 
 		/**
 		*
@@ -261,4 +302,29 @@ class PhotonState{
 	public static inline var CONNECTED                : Int = 3; // The peer is connected and initialized (selected an application). You can now use operations.
 	public static inline var DISCONNECTING            : Int = 4; // The peer is disconnecting. It sent a disconnect to the server, which will acknowledge closing the connection.
 
+}
+
+class PeerState{
+	public static inline var AUTHENTICATED					: String = "Authenticated";
+	public static inline var AUTHENTICATEDCOMINGFROMGAMESERVER	: String = "AuthenticatedComingFromGameserver";
+	public static inline var AUTHENTICATEDONGAMESERVER		: String = "AuthenticatedOnGameServer";
+	public static inline var CONNECTED						: String = "Connected";
+	public static inline var CONNECTEDCOMINGFROMGAMESERVER		: String = "ConnectedComingFromGameserver";
+	public static inline var CONNECTEDTOGAMESERVER			: String = "ConnectedToGameserver";
+	public static inline var CONNECTING					: String = "Connecting";
+	public static inline var CONNECTINGTOGAMESERVER			: String = "ConnectingToGameserver";
+	public static inline var CONNECTINGTOMASTERSERVER			: String = "ConnectingToMasterserver";
+	public static inline var DISCONNECTED					: String = "Disconnected";
+	public static inline var DISCONNECTING					: String = "Disconnecting";
+	public static inline var DISCONNECTINGFROMGAMESERVER		: String = "DisconnectingFromGameserver";
+	public static inline var DISCONNECTINGFROMMASTERSERVER		: String = "DisconnectingFromMasterserver";
+	public static inline var JOINED						: String = "Joined";
+	public static inline var JOINEDLOBBY					: String = "JoinedLobby";
+	public static inline var JOINING						: String = "Joining";
+	public static inline var LEAVING						: String = "Leaving";
+	public static inline var LEFT							: String = "Left";
+	public static inline var PEERCREATED					: String = "PeerCreated";
+	public static inline var QUEUED						: String = "Queued";
+	public static inline var QUEUEDCOMINGFROMGAMESERVER		: String = "QueuedComingFromGameserver";
+	public static inline var UNINITIALIZED					: String = "Uninitialized";
 }

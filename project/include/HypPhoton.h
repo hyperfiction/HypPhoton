@@ -45,6 +45,8 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		const char * getState( void );
 		void hideRoom( void );
 		void joinLobby( void );
+		const char * getRoom_desc( void );
+		const char * getRoom_players( void );
 
 	private:
 		//HypPhoton (const HypPhoton&){}
