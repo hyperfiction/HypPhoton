@@ -68,6 +68,13 @@ extern "C"{
 	}
 	DEFINE_PRIM( HypPhoton_disconnect , 0 );
 
+	static value HypPhoton_leaveRoom( ){
+		printf("HypPhoton_leaveRoom\n");
+		HypPhoton::Instance( ).leaveRoom( );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_leaveRoom , 0 );
+
 	static value HypPhoton_update( ){
 		HypPhoton::Instance( ).update( );
 		return alloc_null( );

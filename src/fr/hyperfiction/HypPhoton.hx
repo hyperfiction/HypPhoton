@@ -140,6 +140,19 @@ class HypPhoton{
 		* @return	void
 		*/
 		#if cpp
+		@CPP("HypPhoton","HypPhoton_leaveRoom")
+		#end
+		public function leaveRoom( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_send")
 		#end
 		public function send( s : String ) : Void {
@@ -182,7 +195,7 @@ class HypPhoton{
 		@CPP("HypPhoton","HypPhoton_getRoom_desc")
 		#end
 		public function getRoom_desc( ) : String {
-
+			return "";
 		}
 
 		/**

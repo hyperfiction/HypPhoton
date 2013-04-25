@@ -191,6 +191,10 @@ const char * HypPhoton::getRoom_players( void ){
 	return res.UTF8Representation( );
 }
 
+void HypPhoton::leaveRoom( void ){
+	mLoadBalancingClient.opLeaveRoom( );
+}
+
 //constructors / destructor  -----------------------------------------------------------------------------------------
 
 HypPhoton::HypPhoton()
