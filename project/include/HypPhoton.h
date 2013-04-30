@@ -45,14 +45,17 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		const char * getState( void );
 		void hideRoom( void );
 		void joinLobby( void );
+		void start( void );
 		void leaveRoom( void );
 		const char * getRoom_desc( void );
 		const char * getRoom_players( void );
+		void addRoom_prop( const char *key , const char *val );
+		const char* getRoom_prop( const char *key );
 
 	private:
 		//HypPhoton (const HypPhoton&){}
-		HypPhoton();
-		~HypPhoton();
+		HypPhoton( );
+		~HypPhoton( );
 		static HypPhoton m_instance;
 		const char * convert( int code );
 		virtual void clientErrorReturn(int errorCode);
@@ -75,5 +78,6 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		virtual void warningReturn(int warningCode);
 
 		ExitGames::LoadBalancing::Client mLoadBalancingClient;
+
 };
 #endif

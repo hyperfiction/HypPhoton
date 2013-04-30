@@ -1,5 +1,9 @@
 package fr.hyperfiction;
 
+#if cpp
+import cpp.vm.Thread;
+#end
+
 /**
  * ...
  * @author shoe[box]
@@ -33,6 +37,19 @@ class HypPhoton{
 		* @return	void
 		*/
 		#if cpp
+		@CPP("HypPhoton","HypPhoton_start")
+		#end
+		public function start( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
 		@CPP("HypPhoton","HypPhoton_setUser_name")
 		#end
 		public function setUser_name( setUser_name : String ) : Void {
@@ -49,10 +66,7 @@ class HypPhoton{
 		@CPP("HypPhoton","HypPhoton_connect")
 		#end
 		public function connect( sHost : String ) : Void {
-			trace("connect");
-			#if cpp
-			_connect( );
-			#end
+
 		}
 
 		/**
@@ -130,7 +144,7 @@ class HypPhoton{
 		@CPP("HypPhoton","HypPhoton_createRoom")
 		#end
 		public function createRoom( sName : String , max : Int ) : Void {
-
+			trace("createRoom ::: "+sName+" - "+max);
 		}
 
 		/**
@@ -214,6 +228,32 @@ class HypPhoton{
 			return [ ];
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_setRoom_prop")
+		#end
+		public function setRoom_prop( sKey : String , sVal : String ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPhoton","HypPhoton_getRoom_prop")
+		#end
+		public function getRoom_prop( sKey : String ) : String {
+			return null;
+		}
+
 	// -------o private
 
 		/**
@@ -226,6 +266,7 @@ class HypPhoton{
 		@CPP("HypPhoton","HypPhoton_getRoom_players")
 		#end
 		private function _getPlayers( ) : String{
+			return "";
 		}
 
 		/**

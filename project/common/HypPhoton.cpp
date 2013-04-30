@@ -35,6 +35,17 @@ const unsigned char MESSAGE = 0;
 #	define PLAYER_NAME L"unknown platform"
 #endif
 
+#ifdef ANDROID
+#include <android/log.h>
+#define printf(fmt,args...)  __android_log_print(ANDROID_LOG_INFO ,"trace", fmt, ##args)
+#endif
+
+#if defined _EG_WIN32_PLATFORM
+#	define SLEEP(ms) Sleep(ms)
+#else
+#	define SLEEP(ms) usleep(ms*1000)
+#endif
+
 using namespace std;
 
 typedef void( *FunctionType)( );
@@ -48,12 +59,12 @@ HypPhoton HypPhoton::m_instance=HypPhoton();
 //public -----------------------------------------------------------------------------------------
 
 void HypPhoton::connect( const char *sHost ){
-	printf("connect %s\n",sHost );
+	printf("HypPhoton::connect %s\n",sHost );
 	mLoadBalancingClient.connect( sHost );
 }
 
 void HypPhoton::disconnect( ){
-	printf("disconnect\n");
+	printf("HypPhoton::disconnect\n");
 	mLoadBalancingClient.disconnect( );
 }
 
@@ -61,8 +72,25 @@ void HypPhoton::setUser_name( const char *sUser_name ){
 	mLoadBalancingClient.getCurrentlyJoinedRoom( ).getLocalPlayer( ).setName( sUser_name );
 }
 
+void HypPhoton::start( ){
+	printf("start\n");
+}
+
 void HypPhoton::update( ){
+	//printf("update\n");
 	mLoadBalancingClient.service();
+}
+
+void HypPhoton::addRoom_prop( const char *key , const char *val ){
+	printf("addRoom_prop");
+	ExitGames::Common::Hashtable 	data;
+	printf("data %s\n",data );
+							//data = mLoadBalancingClient.getCurrentlyJoinedRoom( ).getCustomProperties( );
+							//data.put<ExitGames::Common::JString,ExitGames::Common::JString>( key , val );
+}
+
+const char* HypPhoton::getRoom_prop( const char *key ){
+	return (const char *)mLoadBalancingClient.getCurrentlyJoinedRoom( ).getCustomProperties( ).getValue( key );
 }
 
 void HypPhoton::joinLobby( ){
@@ -201,7 +229,7 @@ HypPhoton::HypPhoton()
 #ifdef _EG_MS_COMPILER
 #	pragma warning(push)
 #endif
-	: mLoadBalancingClient(*this, L"f0350eac-4528-41d7-b0e8-0621a46429e8", L"1.0", PLAYER_NAME )
+	: mLoadBalancingClient(*this, L"appid", L"1.0", PLAYER_NAME )
 #ifdef _EG_MS_COMPILER
 #	pragma warning(pop)
 #endif

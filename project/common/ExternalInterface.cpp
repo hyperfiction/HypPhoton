@@ -21,7 +21,7 @@
 	#include <hx/Macros.h>
 	#include <jni.h>
 	#define LOG_TAG "trace"
-	#define printf(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+	#define ALOG(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #endif
 
 
@@ -53,6 +53,24 @@ extern "C"{
 		return alloc_null( );
 	}
 	DEFINE_PRIM( HypPhoton_test , 0 );
+
+	static value HypPhoton_setRoom_prop( value sKey , value sVal ){
+		HypPhoton::Instance( ).addRoom_prop( val_string( sKey ) , val_string( sVal ) );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_setRoom_prop , 2 );
+
+	static value HypPhoton_getRoom_prop( value sKey ){
+		return alloc_string( HypPhoton::Instance( ).getRoom_prop( val_string( sKey ) ) );
+	}
+	DEFINE_PRIM( HypPhoton_getRoom_prop , 1 );
+
+	static value HypPhoton_start( ){
+		printf("start\n");
+		HypPhoton::Instance( ).start( );
+		return alloc_null( );
+	}
+	DEFINE_PRIM( HypPhoton_start , 0 );
 
 	static value HypPhoton_connect( value sHost ){
 		printf("connect\n");
