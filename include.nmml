@@ -7,6 +7,8 @@
 	<!-- ndll -->
 		<ndll name="HypPhoton" unless="flash"/>
 
+		<templatePath name="templates" />
+
 	<!-- android -->
 
 	<!-- flash -->
