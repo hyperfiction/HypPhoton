@@ -49,7 +49,7 @@ class HypPhoton : private ExitGames::LoadBalancing::Listener{
 		void leaveRoom( void );
 		const char * getRoom_desc( void );
 		const char * getRoom_players( void );
-		void addRoom_prop( const char *key , const char *val );
+		void addRoom_prop( const char *k , const char *v );
 		const char* getRoom_prop( const char *key );
 
 	private:

@@ -2,7 +2,7 @@ package ;
 
 import fr.hyperfiction.HypPhoton;
 
-import nme.display.Sprite;
+import flash.display.Sprite;
 
 /**
  * ...
@@ -37,7 +37,7 @@ class TestPhoton extends Sprite{
 			//_photon.init("osef","0.1","player"+Std.int( Math.random( ) * 1000 ) );
 			_photon.connect( "137.116.225.3:5055");
 			//_photon.connect( "app.exitgamescloud.com:5055");
-			nme.Lib.current.stage.addEventListener( nme.events.Event.ENTER_FRAME , function( _ ){
+			nme.Lib.current.stage.addEventListener( flash.events.Event.ENTER_FRAME , function( _ ){
 				_photon.update( );
 			});
 		}
@@ -81,7 +81,7 @@ class TestPhoton extends Sprite{
 				case PhotonEvents.JOIN_RANDOM_ROOM_ERROR:
 					trace("JOIN_RANDOM_ROOM_ERROR");
 					trace("create room");
-					_photon.createRoom( 2 );
+					_photon.createRoom( "2" , 2 );
 
 				case PhotonEvents.JOIN_RANDOM_ROOM_SUCCESS:
 					trace("JOIN_RANDOM_ROOM_SUCCESS");

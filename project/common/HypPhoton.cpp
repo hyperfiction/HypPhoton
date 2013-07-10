@@ -5,6 +5,8 @@
 
 const unsigned char MESSAGE = 0;
 
+
+
 #if defined _EG_MARMALADE_PLATFORM
 #	if defined I3D_ARCH_X86
 #		if(defined _MSC_VER && !defined __clang__ && !defined __gcc__)
@@ -82,15 +84,11 @@ void HypPhoton::update( ){
 }
 
 void HypPhoton::addRoom_prop( const char *key , const char *val ){
-	printf("addRoom_prop");
-	ExitGames::Common::Hashtable 	data;
-	printf("data %s\n",data );
-							//data = mLoadBalancingClient.getCurrentlyJoinedRoom( ).getCustomProperties( );
-							//data.put<ExitGames::Common::JString,ExitGames::Common::JString>( key , val );
+
 }
 
 const char* HypPhoton::getRoom_prop( const char *key ){
-	return (const char *)mLoadBalancingClient.getCurrentlyJoinedRoom( ).getCustomProperties( ).getValue( key );
+	return "TODO";
 }
 
 void HypPhoton::joinLobby( ){
@@ -229,7 +227,9 @@ HypPhoton::HypPhoton()
 #ifdef _EG_MS_COMPILER
 #	pragma warning(push)
 #endif
-	: mLoadBalancingClient(*this, L"appid", L"1.0", PLAYER_NAME )
+	//: mLoadBalancingClient(*this, L"f0350eac-4528-41d7-b0e8-0621a46429e8", L"1.0", PLAYER_NAME ) //PHOTON v1.1
+	: mLoadBalancingClient(*this, L"83496486-a66a-48f6-b4e1-6501fb22d5d1", L"1.0", PLAYER_NAME ) //PHOTON v1.2
+	//: mLoadBalancingClient(*this, L"11f9de03-946a-4af8-8895-0d285495d2be", L"1.0", PLAYER_NAME ) //DEV
 #ifdef _EG_MS_COMPILER
 #	pragma warning(pop)
 #endif
@@ -347,7 +347,12 @@ void HypPhoton::leaveLobbyReturn(void){
 
 void HypPhoton::leaveRoomEventAction(int playerNr){
 	printf("leaveRoomEventAction\n");
-	onEvent( PLAYER_LEAVED_ROOM , convert( playerNr ));
+	/*
+	printf("playerName %s\n", mLoadBalancingClient.getCurrentlyJoinedRoom( ).getPlayers( )[ playerNr ].getName( ).UTF8Representation( ));
+	onEvent( PLAYER_LEAVED_ROOM , mLoadBalancingClient.getCurrentlyJoinedRoom( ).getPlayers( )[ playerNr ].getName( ).UTF8Representation( ) );
+	*/
+
+	onEvent( PLAYER_LEAVED_ROOM , "");
 }
 
 void HypPhoton::leaveRoomReturn(int errorCode, const ExitGames::Common::JString& errorString){

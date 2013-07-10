@@ -332,6 +332,7 @@ class PhotonEvents{
 	public static inline var CREATE_ROOM_SUCCESS		: String = "CREATE_ROOM_SUCCESS";
 	public static inline var DEBUG_RETURN			: String = "DEBUG_RETURN";
 	public static inline var DISCONNECT_RETURN		: String = "DISCONNECT_RETURN";
+	public static inline var EVENT				: String = "EVENT";
 	public static inline var GOT_QUEUE_RETURN		: String = "GOT_QUEUE_RETURN";
 	public static inline var JOINED_LOBBY_SUCCESS	: String = "JOINED_LOBBY_SUCCESS";
 	public static inline var JOIN_RANDOM_ROOM_ERROR	: String = "JOIN_RANDOM_ROOM_ERROR";
@@ -345,7 +346,6 @@ class PhotonEvents{
 	public static inline var PLAYER_LEAVED_ROOM		: String = "PLAYER_LEAVED_ROOM";
 	public static inline var SERVER_ERROR			: String = "SERVER_ERROR";
 	public static inline var SERVER_WARNING			: String = "SERVER_WARNING";
-	public static inline var EVENT				: String = "EVENT";
 }
 
 class PhotonState{

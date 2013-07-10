@@ -4,6 +4,7 @@
 
 #ifndef WINDOWS
 #define _WINSOCKAPI_
+#pragma warning ( disable : 4005 )
 //#define _ITERATOR_DEBUG_LEVEL 2
 #endif
 
